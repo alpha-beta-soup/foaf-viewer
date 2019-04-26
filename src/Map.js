@@ -24,7 +24,7 @@ const config = {
     params: {
       minZoom: 0,
       subdomains: 'abcdefghijk',
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>',
       id: '',
       accessToken: ''
     }
@@ -119,8 +119,8 @@ class Map extends Component {
       }
     `
     // Note: must use a SPARQL endpoint that allows setting the default graph URI, which many don't, including DBPedia
-    // const sparql_endpoint = "http://dbpedia.org/sparql"
-    const sparql_endpoint = "http://linkeddata.uriburner.com/sparql"
+    // const sparql_endpoint = "https://dbpedia.org/sparql"
+    const sparql_endpoint = "https://linkeddata.uriburner.com/sparql"
     const queryParams = new URLSearchParams({
       'query': query,
       'format': 'json',

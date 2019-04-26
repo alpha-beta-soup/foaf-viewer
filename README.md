@@ -1,3 +1,9 @@
+An experiment to visualise the location of people described in a FOAF RDF document. Forked from a bootstrapped React/Leaflet demo just for the sake of speed. Inspired by the sample FOAF SPARQL queries in a textbook. Simply takes a URI to a FOAF document to use as a dataset, and then runs a query against it, retuning the names and locations of people found in the dataset.
+
+Original readme continues below.
+
+— Richard
+
 # React Leaflet Web Map Demo
 
 A ~~bare bones vanilla~~ [Leaflet.JS](http://leafletjs.com/examples/quick-start.html) map created using <a href="https://facebook.github.io/react/">React</a> and [Create React App](https://github.com/facebookincubator/create-react-app) as a starting point for the app scaffolding.

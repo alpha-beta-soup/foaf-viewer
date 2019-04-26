@@ -4,10 +4,22 @@ html, body {
   height: 100%;
   width: 100%;
 }
-#root, #map, #mapUI {
+#root, #mapUI {
   width: inherit;
   height: inherit;
   background-color: #000;
+}
+#map {
+  width: inherit;
+  height: 97%;
+}
+#foafuri {
+  width: inherit;
+  height: 3%;
+  background-color: white;
+}
+#foafuri input {
+  width: 400px;
 }
 .filterSubwayLines {
   position: absolute;

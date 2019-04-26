@@ -84,8 +84,6 @@ class Map extends Component {
     this.setState({foafuris}, this.getData)
   }
 
-  // http://www.bosatsu.net/foaf/brian.rdf
-
   showInput() {
     this.setState({ inputVisible: true }, () => this.input.focus())
   }

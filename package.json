@@ -6,7 +6,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/clhenrick/React-Leaflet-demo"
+    "url": "git+https://github.com/alpha-beta-soup/foaf-viewer"
   },
   "keywords": [
     "react, leaflet"
@@ -14,10 +14,10 @@
   "author": "Chris Henrick",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/clhenrick/React-Leaflet-demo/issues"
+    "url": "https://github.com/alpha-beta-soup/foaf-viewer/issues"
   },
-  "homepage": "http://clhenrick.github.io/React-Leaflet-demo",
-  "name": "react-leaflet-demo",
+  "homepage": "https://spatialparalysis.xyz/foaf-viewer",
+  "name": "foaf-viewer",
   "version": "0.0.1",
   "private": true,
   "devDependencies": {

@@ -1,5 +1,7 @@
 An experiment to visualise the location of people described in a FOAF RDF document. Forked from a bootstrapped React/Leaflet demo just for the sake of speed. Inspired by the sample FOAF SPARQL queries in a textbook. Simply takes a URI to a FOAF document to use as a dataset, and then runs a query against it, retuning the names and locations of people found in the dataset.
 
+Demo: https://spatialparalysis.xyz/foaf-viewer
+
 Original readme continues below.
 
 — Richard

@@ -12,7 +12,7 @@ const config = {
     center: [0.0,0.0],
     zoomControl: false,
     zoom: 2,
-    maxZoom: 5,
+    maxZoom: 8,
     minZoom: 0,
     scrollwheel: false,
     legends: true,
@@ -41,6 +41,7 @@ class Map extends Component {
       geojson: null,
       people: [],
       foafuris: [
+        "https://gist.githubusercontent.com/alpha-beta-soup/1e2699188c61b170ac2a5ed3341e450f/raw/35fa8e0d3d967e8787a34454641950aac659da5e/foaf.ttl",
         "http://3roundstones.com/dave/me.rdf",
         "https://w3id.org/people/bsletten"
       ],

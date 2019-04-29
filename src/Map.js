@@ -5,6 +5,12 @@ import {Tag, Input, Tooltip, Icon} from 'antd'
 import 'leaflet/dist/leaflet.css'
 import 'antd/dist/antd.css'
 
+const jitter = (x) => {
+  const maxAdd = 0.025
+  const maxSub = -0.025
+  return x + (Math.random() * (maxAdd - maxSub) + maxSub)
+}
+
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
 const config = {
@@ -149,7 +155,7 @@ class Map extends Component {
           },
           geometry: {
             type: 'Point',
-            coordinates: [person.longitude.value, person.latitude.value].map(parseFloat)
+            coordinates: [person.longitude.value, person.latitude.value].map(parseFloat).map(jitter)
           }
         }
       })

@@ -47,7 +47,7 @@ class Map extends Component {
       geojson: null,
       people: [],
       foafuris: [
-        "https://gist.githubusercontent.com/alpha-beta-soup/1e2699188c61b170ac2a5ed3341e450f/raw/35fa8e0d3d967e8787a34454641950aac659da5e/foaf.ttl",
+        "https://gist.githubusercontent.com/alpha-beta-soup/1e2699188c61b170ac2a5ed3341e450f/raw/d6c7e5b74d190a745ad34196cefb48fda7804551/foaf.ttl",
         "http://3roundstones.com/dave/me.rdf",
         "https://w3id.org/people/bsletten"
       ],

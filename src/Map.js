@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import L from 'leaflet'
-import {Tag, Input, Tooltip, Icon, Statistic} from 'antd'
+import {Tag, Input, Tooltip, Icon, Statistic, Drawer, Button} from 'antd'
 
 import 'leaflet/dist/leaflet.css'
 import 'antd/dist/antd.css'
@@ -47,12 +47,13 @@ class Map extends Component {
       geojson: null,
       unlocatedPeople: [],
       foafuris: [
-        "https://gist.githubusercontent.com/alpha-beta-soup/1e2699188c61b170ac2a5ed3341e450f/raw/d6c7e5b74d190a745ad34196cefb48fda7804551/foaf.ttl",
+        "https://gist.githubusercontent.com/alpha-beta-soup/1e2699188c61b170ac2a5ed3341e450f/raw/0177f99752bfcbbb2497a9a4158c1ced6abd073b/foaf.ttl",
         "http://3roundstones.com/dave/me.rdf",
         "https://w3id.org/people/bsletten"
       ],
       inputVisible: false,
-      inputValue: ''
+      inputValue: '',
+      showDrawer: false
     }
     this._mapNode = null
     this.onEachFeature = this.onEachFeature.bind(this)
@@ -117,13 +118,16 @@ class Map extends Component {
       PREFIX foaf: <http://xmlns.com/foaf/0.1/>
       PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 
-      SELECT distinct ?name ?latitude ?longitude
+      SELECT distinct ?name ?latitude ?longitude ?homepage
       WHERE {
         ?person foaf:name ?name .
         OPTIONAL {
           ?person foaf:based_near ?near .
           ?near geo:lat ?latitude ;
           geo:long ?longitude .
+        }
+        OPTIONAL {
+          ?person foaf:homepage ?homepage .
         }
       }
     `
@@ -151,27 +155,17 @@ class Map extends Component {
     }).then(data => {
       console.log({data})
       return data.results.bindings.map(person => {
-        if (person.longitude && person.latitude) {
-          return {
-            type: 'Feature',
-            properties: {
-              name: person.name.value
-            },
-            geometry: {
-              type: 'Point',
-              coordinates: [person.longitude.value, person.latitude.value].map(parseFloat).map(jitter)
-            }
-          }
-        } else {
-          return {
-            type: 'Feature',
-            properties: {
-              name: person.name.value
-            },
-            geometry: null
-          }
+        return {
+          type: 'Feature',
+          properties: {
+            name: person.name.value,
+            homepage: person.homepage ? person.homepage.value : null
+          },
+          geometry: (person.longitude && person.latitude) ? {
+            type: 'Point',
+            coordinates: [person.longitude.value, person.latitude.value].map(parseFloat).map(jitter)
+          } : null
         }
-
       })
     }).then(features => {
       // this.addGeoJSONLayer({'type': 'FeatureCollection', features })
@@ -201,6 +195,14 @@ class Map extends Component {
   zoomToFeature(target) {
     // set the map's center & zoom so that it fits the geographic extent of the layer
     this.state.map.fitBounds(target.getBounds());
+  }
+
+  showDrawer = () => {
+    this.setState({showDrawer: true})
+  }
+
+  hideDrawer = () => {
+    this.setState({showDrawer: false})
   }
 
   pointToLayer(feature, latlng) {
@@ -243,7 +245,7 @@ class Map extends Component {
   }
 
   render() {
-    const { foafuris, inputVisible, inputValue, unlocatedPeople, geojson } = this.state
+    const { foafuris, inputVisible, inputValue, unlocatedPeople, geojson, showDrawer } = this.state
     const totalPeople = geojson ? geojson.features.length : 0
     return (
       <div id="mapUI">
@@ -283,7 +285,25 @@ class Map extends Component {
               <div id="unlocatedPeople">
                 <Statistic title="Located" value={totalPeople - unlocatedPeople.length} prefix={
                   <Icon type="idcard"/>
-                } suffix={`/ ${totalPeople} ${totalPeople == 1 ? 'person' : 'people'}`}/>
+                } suffix={`/ ${totalPeople} ${totalPeople === 1 ? 'person' : 'people'}`}/>
+                {unlocatedPeople.length ? <div>
+                <Button type="primary" onClick={this.showDrawer}>
+                  Who's missing?
+                </Button>
+                <Drawer
+                  title="People"
+                  placement="right"
+                  closable={true}
+                  onClose={this.hideDrawer}
+                  visible={showDrawer}
+                  disabled={!!unlocatedPeople.length}
+                >
+                  {unlocatedPeople.map((person, i) => {
+                    return person.properties.homepage
+                    ? (<p key={i}><a target="#" href={person.properties.homepage}>{person.properties.name}</a></p>)
+                    : (<p key={i}>{person.properties.name}</p>)
+                  })}
+                </Drawer></div> : null}
               </div>
             )
           }

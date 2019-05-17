@@ -11,7 +11,7 @@ html, body {
 }
 #map {
   width: inherit;
-  height: 94%;
+  height: 97%;
 }
 #foafuri {
   width: inherit;
@@ -23,9 +23,17 @@ html, body {
 }
 #unlocatedPeople {
   /* color: red; */
-  width: inherit;
+  padding: 10px;
+  border-radius: 5%;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  /* width: inherit; */
   /* height: 3%; */
   background-color: white;
+}
+#unlocatedPeople .ant-statistic-title {
+  text-decoration: underline;
 }
 .filterSubwayLines {
   position: absolute;

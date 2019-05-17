@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import L from 'leaflet'
-import {Tag, Input, Tooltip, Icon} from 'antd'
+import {Tag, Input, Tooltip, Icon, Statistic} from 'antd'
 
 import 'leaflet/dist/leaflet.css'
 import 'antd/dist/antd.css'
@@ -45,7 +45,7 @@ class Map extends Component {
       tileLayer: null,
       geojsonLayer: null,
       geojson: null,
-      people: [],
+      unlocatedPeople: [],
       foafuris: [
         "https://gist.githubusercontent.com/alpha-beta-soup/1e2699188c61b170ac2a5ed3341e450f/raw/d6c7e5b74d190a745ad34196cefb48fda7804551/foaf.ttl",
         "http://3roundstones.com/dave/me.rdf",
@@ -114,15 +114,17 @@ class Map extends Component {
   getData() {
     this.removeGeoJSONLayer()
     const query = `
-      prefix foaf: <http://xmlns.com/foaf/0.1/>
-      prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+      PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+      PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 
-      select distinct ?name ?latitude ?longitude
-      where {
-        ?person foaf:name ?name ;
-                foaf:based_near ?near .
-        ?near geo:lat ?latitude ;
-              geo:long ?longitude .
+      SELECT distinct ?name ?latitude ?longitude
+      WHERE {
+        ?person foaf:name ?name .
+        OPTIONAL {
+          ?person foaf:based_near ?near .
+          ?near geo:lat ?latitude ;
+          geo:long ?longitude .
+        }
       }
     `
     // Note: must use a SPARQL endpoint that allows setting the default graph URI, which many don't, including DBPedia
@@ -147,21 +149,33 @@ class Map extends Component {
     fetch(url, options).then(response => {
       return response.json()
     }).then(data => {
+      console.log({data})
       return data.results.bindings.map(person => {
-        return {
-          type: 'Feature',
-          properties: {
-            name: person.name.value
-          },
-          geometry: {
-            type: 'Point',
-            coordinates: [person.longitude.value, person.latitude.value].map(parseFloat).map(jitter)
+        if (person.longitude && person.latitude) {
+          return {
+            type: 'Feature',
+            properties: {
+              name: person.name.value
+            },
+            geometry: {
+              type: 'Point',
+              coordinates: [person.longitude.value, person.latitude.value].map(parseFloat).map(jitter)
+            }
+          }
+        } else {
+          return {
+            type: 'Feature',
+            properties: {
+              name: person.name.value
+            },
+            geometry: null
           }
         }
+
       })
     }).then(features => {
       // this.addGeoJSONLayer({'type': 'FeatureCollection', features })
-      this.setState({geojsonLayer: null, geojson: { 'type': 'FeatureCollection', features }})
+      this.setState({geojsonLayer: null, geojson: { 'type': 'FeatureCollection', features }, unlocatedPeople: features.filter(p => !p.geometry)})
     }).catch(error => console.error(error))
   }
 
@@ -229,7 +243,8 @@ class Map extends Component {
   }
 
   render() {
-    const { foafuris, inputVisible, inputValue } = this.state
+    const { foafuris, inputVisible, inputValue, unlocatedPeople, geojson } = this.state
+    const totalPeople = geojson ? geojson.features.length : 0
     return (
       <div id="mapUI">
         <div ref={(node) => this._mapNode = node} id="map" />
@@ -261,6 +276,15 @@ class Map extends Component {
               <Tag onClick={this.showInput} style={{ background: '#fff', borderStyle: 'dashed' }}>
                 <Icon type="plus"/> New FOAF URI
               </Tag>
+            )
+          }
+          {
+            !inputVisible && (
+              <div id="unlocatedPeople">
+                <Statistic title="Located" value={totalPeople - unlocatedPeople.length} prefix={
+                  <Icon type="idcard"/>
+                } suffix={`/ ${totalPeople} ${totalPeople == 1 ? 'person' : 'people'}`}/>
+              </div>
             )
           }
         </div>

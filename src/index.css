@@ -11,7 +11,7 @@ html, body {
 }
 #map {
   width: inherit;
-  height: 97%;
+  height: 94%;
 }
 #foafuri {
   width: inherit;
@@ -20,6 +20,12 @@ html, body {
 }
 #foafuri input {
   width: 400px;
+}
+#unlocatedPeople {
+  /* color: red; */
+  width: inherit;
+  /* height: 3%; */
+  background-color: white;
 }
 .filterSubwayLines {
   position: absolute;
